@@ -305,17 +305,17 @@ utils.defineProperty(EtherscanProvider.prototype, 'getTokenHistory', function(ad
 
         return Provider.fetchJSON(url, null, getResult).then(function(result) {
             var output = [];
-            // result.forEach(function(tx) {
-            //     ['contractAddress', 'to'].forEach(function(key) {
-            //         if (tx[key] == '') { delete tx[key]; }
-            //     });
-            //     if (tx.creates == null && tx.contractAddress != null) {
-            //         tx.creates = tx.contractAddress;
-            //     }
-            //     var item = Provider._formatters.checkTransactionResponse(tx);
-            //     if (tx.timeStamp) { item.timestamp = parseInt(tx.timeStamp); }
-            //     output.push(item);
-            // });
+            result.forEach(function(tx) {
+                ['contractAddress', 'to'].forEach(function(key) {
+                    if (tx[key] == '') { delete tx[key]; }
+                });
+                if (tx.creates == null && tx.contractAddress != null) {
+                    tx.creates = tx.contractAddress;
+                }
+                var item = Provider._formatters.checkTransactionResponse(tx);
+                if (tx.timeStamp) { item.timestamp = parseInt(tx.timeStamp); }
+                output.push(item);
+            });
             return result;
         });
     });
