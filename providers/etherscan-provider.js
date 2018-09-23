@@ -292,9 +292,6 @@ utils.defineProperty(EtherscanProvider.prototype, 'getTokenHistory', function(ad
     var apiKey = '';
     if (this.apiKey) { apiKey += '&apikey=' + this.apiKey; }
 
-    if (startBlock == null) { startBlock = 0; }
-    if (endBlock == null) { endBlock = 99999999; }
-
     return this.resolveName(addressOrName).then(function(address) {
         url += '/api?module=account&action=tokentx&address=' + address;
         url += '&contractAddress=' + contractAddress;
