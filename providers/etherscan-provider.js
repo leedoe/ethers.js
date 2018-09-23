@@ -285,7 +285,7 @@ utils.defineProperty(EtherscanProvider.prototype, 'getHistory', function(address
     });
 });
 
-utils.defineProperty(EtherscanProvider.prototype, 'getTokenHistory', function(addressOrName, contractAddress, startBlock, endBlock, page) {
+utils.defineProperty(EtherscanProvider.prototype, 'getTokenHistory', function(addressOrName, contractAddress, page) {
 
     var url = this.baseUrl;
 
@@ -296,10 +296,8 @@ utils.defineProperty(EtherscanProvider.prototype, 'getTokenHistory', function(ad
     if (endBlock == null) { endBlock = 99999999; }
 
     return this.resolveName(addressOrName).then(function(address) {
-        url += '/api?module=account&action=txlist&address=' + address;
+        url += '/api?module=account&action=tokentx&address=' + address;
         url += '&contractAddress=' + contractAddress;
-        url += '&startblock=' + startBlock;
-        url += '&endblock=' + endBlock;
         url += '&page=' + page;
         url += '&sort=asc&offset=100';
 
