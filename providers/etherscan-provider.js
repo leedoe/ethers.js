@@ -285,6 +285,42 @@ utils.defineProperty(EtherscanProvider.prototype, 'getHistory', function(address
     });
 });
 
+utils.defineProperty(EtherscanProvider.prototype, 'getHistoryWithPage', function(addressOrName, page, offset) {
+
+    var url = this.baseUrl;
+
+    var apiKey = '';
+    if (this.apiKey) { apiKey += '&apikey=' + this.apiKey; }
+
+    if (page == null) { page = 1; }
+    if (offset == null) { offset = 100; }
+
+    return this.resolveName(addressOrName).then(function(address) {
+        url += '/api?module=account&action=txlist&address=' + address;
+        url += '&page=' + page;
+        url += '&offset=' + offset;
+        url += '&sort=asc';
+
+        return Provider.fetchJSON(url, null, getResult).then(function(result) {
+            var output = [];
+            result.forEach(function(tx) {
+                ['contractAddress', 'to'].forEach(function(key) {
+                    if (tx[key] == '') { delete tx[key]; }
+                });
+                if (tx.creates == null && tx.contractAddress != null) {
+                    tx.creates = tx.contractAddress;
+                }
+                var item = Provider._formatters.checkTransactionResponse(tx);
+                if (tx.timeStamp) { item.timestamp = parseInt(tx.timeStamp); }
+                output.push(item);
+            });
+            return output;
+        });
+    });
+});
+
+
+
 utils.defineProperty(EtherscanProvider.prototype, 'getTokenHistory', function(addressOrName, contractAddress, page) {
 
     var url = this.baseUrl;
